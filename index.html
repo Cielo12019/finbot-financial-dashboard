@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinBot Dashboard</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <div class="brand"><span class="robot">🤖</span><span>FINBOT</span></div>
+
+    <nav class="nav">
+      <a class="nav-item active" href="#resumen"><span>⌂</span>Resumen</a>
+      <a class="nav-item" href="#ingresos"><span>▣</span>Ingresos</a>
+      <a class="nav-item" href="#gastos"><span>▣</span>Gastos</a>
+      <a class="nav-item" href="#presupuesto"><span>◉</span>Presupuesto</a>
+      <a class="nav-item" href="#ahorro"><span>◉</span>Ahorro</a>
+      <a class="nav-item" href="#deudas"><span>♙</span>Deudas</a>
+      <a class="nav-item" href="#reportes"><span>▤</span>Reportes</a>
+      <a class="nav-item" href="#metas"><span>♢</span>Metas</a>
+      <a class="nav-item" href="#configuracion"><span>⚙</span>Configuración</a>
+      <a class="nav-item" href="#ayuda"><span>?</span>Ayuda</a>
+    </nav>
+
+    <div class="assistant-card">
+      <div class="assistant-title"><span>🤖</span><b>FinBot</b><i></i></div>
+      <small>Asistente financiero</small>
+      <p>Estoy aquí para ayudarte a tomar mejores decisiones con tu dinero.</p>
+    </div>
+    <a class="privacy">Política de Privacidad</a>
+  </aside>
+
+  <main class="main">
+    <header class="topbar">
+      <div class="greeting">
+        <button class="mobile-menu" id="mobileMenu">☰</button>
+        <div>
+          <h1>Hola, Cielo 👋</h1>
+          <p>Aquí tienes el resumen de tus finanzas</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <!-- Se mantiene el buscador de usuario y su botón Buscar -->
+        <div class="search-user">
+          <span>👤</span>
+          <input id="phone" value="51953065750" placeholder="Usuario / teléfono" aria-label="Usuario o teléfono">
+          <button id="searchBtn" type="button">Buscar</button>
+        </div>
+
+        <select id="moneda" aria-label="Moneda">
+          <option value="PEN">PEN</option>
+          <option value="USD">USD</option>
+          <option value="EUR">EUR</option>
+        </select>
+
+        <button class="toolbar-btn" id="refreshBtn" type="button">⟳ Actualizar</button>
+      </div>
+    </header>
+
+    <div id="loading" class="loading">Consultando información del usuario...</div>
+    <div id="errorBox" class="error-box"></div>
+
+    <section id="dashboard" class="dashboard-view">
+      <div class="summary-grid">
+        <article class="summary-card income">
+          <div class="metric-icon">▣</div>
+          <div class="metric-content">
+            <span>Ingresos</span>
+            <strong id="ingresos">S/ 8,500</strong>
+            <small>+8.2% <em>vs. mes anterior</em></small>
+          </div>
+          <div class="mini-line">⌁⌁⌁</div>
+        </article>
+
+        <article class="summary-card expense">
+          <div class="metric-icon">▣</div>
+          <div class="metric-content">
+            <span>Gastos</span>
+            <strong id="gastos">S/ 5,240</strong>
+            <small>-4.5% <em>vs. mes anterior</em> ↘</small>
+          </div>
+          <div class="mini-line">⌁⌁⌁</div>
+        </article>
+
+        <article class="summary-card balance">
+          <div class="metric-icon">▣</div>
+          <div class="metric-content">
+            <span>Saldo disponible</span>
+            <strong id="saldo">S/ 3,260</strong>
+            <small>+12.3% <em>vs. mes anterior</em> ↗</small>
+          </div>
+          <div class="mini-line">⌁⌁⌁</div>
+        </article>
+
+        <article class="summary-card saving">
+          <div class="metric-icon">♙</div>
+          <div class="metric-content">
+            <span>Ahorro del mes</span>
+            <strong id="ahorro">S/ 3,260</strong>
+            <small id="porcentajeAhorro">38.4% de tus ingresos</small>
+          </div>
+          <div class="mini-line">⌁⌁⌁</div>
+        </article>
+      </div>
+
+      <div class="three-grid">
+        <article class="panel">
+          <div class="panel-head"><h2>💰 Tu Plata Entrante</h2><button>⋮</button></div>
+          <div class="donut-layout">
+            <div class="donut-chart"><canvas id="ingresosChart"></canvas></div>
+            <div id="ingresosLegend" class="legend"></div>
+          </div>
+          <div class="panel-foot">Ver detalles</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>🔥 Presupuesto Usado</h2><button>⋮</button></div>
+          <div class="budget-body">
+            <div class="budget-number">
+              <span><b id="budgetUsed">S/ 5,240</b> de <b id="budgetTotal">S/ 6,500</b></span>
+              <strong id="budgetPct">80.6%</strong>
+            </div>
+            <div class="progress"><span id="progressBar"></span></div>
+            <div class="budget-label">Por categoría</div>
+            <div id="categoryBars" class="category-bars"></div>
+          </div>
+          <div class="panel-foot">Ver detalles</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>🎯 Gastos por tipo</h2><button>⋮</button></div>
+          <div class="donut-layout">
+            <div class="donut-chart"><canvas id="gastosChart"></canvas></div>
+            <div id="gastosLegend" class="legend"></div>
+          </div>
+          <div class="panel-foot">Ver detalles</div>
+        </article>
+      </div>
+
+      <div class="three-grid lower">
+        <article class="panel">
+          <div class="panel-head"><h2>⌛ Tendencia de Gastos</h2><button>⋮</button></div>
+          <div class="chart-wrap"><canvas id="tendenciaChart"></canvas></div>
+          <div class="alert">🔻 Tus gastos aumentaron 12% respecto al mes anterior.</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>🗓️ Ahorro mensual</h2><button>⋮</button></div>
+          <div class="saving-head">
+            <div><b>Meta de ahorro: S/ 3,000</b><strong>Actual: <span id="savingActual">S/ 3,260</span></strong></div>
+            <mark id="savingPct">108.7%</mark>
+          </div>
+          <div class="chart-wrap saving-chart"><canvas id="ahorroChart"></canvas></div>
+          <div class="panel-foot">Ver detalles</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>⚖️ Ingresos vs Gastos</h2><button>⋮</button></div>
+          <div class="chart-wrap"><canvas id="ingresosGastosChart"></canvas></div>
+          <div class="panel-foot">Ver detalles</div>
+        </article>
+      </div>
+
+      <div class="bottom-grid">
+        <article class="panel">
+          <div class="panel-head"><h2>🧾 Gastos Desglosados</h2><button>⋮</button></div>
+          <div class="table-wrap">
+            <table>
+              <thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Tipo</th><th>Monto</th></tr></thead>
+              <tbody id="transacciones"></tbody>
+            </table>
+          </div>
+          <div class="panel-foot">Ver todas las transacciones</div>
+        </article>
+
+        <article class="panel">
+          <div class="panel-head"><h2>🤖 Insights de FinBot</h2><button>⋮</button></div>
+          <div class="insights" id="insights"></div>
+          <div class="panel-foot">Ver más recomendaciones</div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Las vistas adicionales se mantienen funcionales con la misma API -->
+    <section id="section-ingresos" class="page-section">
+      <div class="page-title"><h2>💰 Ingresos</h2><p>Información del usuario buscado.</p></div>
+      <div class="stat-grid"><div class="stat"><span>Total de ingresos</span><b id="incomeTotal">S/ 0</b></div><div class="stat"><span>Fuentes</span><b id="incomeSources">0</b></div></div>
+      <div class="page-grid"><article class="panel"><div class="panel-head"><h2>Ingresos por fuente</h2></div><div class="large-chart"><canvas id="incomeDetailChart"></canvas></div></article><article class="panel"><div class="panel-head"><h2>Detalle</h2></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Monto</th></tr></thead><tbody id="incomeTable"></tbody></table></div></article></div>
+    </section>
+
+    <section id="section-gastos" class="page-section">
+      <div class="page-title"><h2>💸 Gastos</h2><p>Información del usuario buscado.</p></div>
+      <div class="stat-grid"><div class="stat"><span>Total de gastos</span><b id="expenseTotal">S/ 0</b></div><div class="stat"><span>Categorías</span><b id="expenseCategories">0</b></div></div>
+      <div class="page-grid"><article class="panel"><div class="panel-head"><h2>Gastos por categoría</h2></div><div class="large-chart"><canvas id="expenseDetailChart"></canvas></div></article><article class="panel"><div class="panel-head"><h2>Distribución</h2></div><div id="expenseList" class="expense-list"></div></article></div>
+      <article class="panel page-table"><div class="panel-head"><h2>Detalle de gastos</h2></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Descripción</th><th>Categoría</th><th>Monto</th></tr></thead><tbody id="expenseTable"></tbody></table></div></article>
+    </section>
+
+    <section id="section-presupuesto" class="page-section">
+      <div class="page-title"><h2>🔥 Presupuesto</h2><p>Control del presupuesto del usuario.</p></div>
+      <article class="panel budget-page"><div class="big-budget"><div><span>Total</span><b id="pageBudgetTotal">S/ 0</b></div><div><span>Gastado</span><b id="pageBudgetUsed">S/ 0</b></div><div><span>Disponible</span><b id="pageBudgetAvailable">S/ 0</b></div></div><div class="big-progress"><span id="pageProgress"></span></div><strong id="pageBudgetPct">0%</strong></article>
+    </section>
+
+    <section id="section-ahorro" class="page-section">
+      <div class="page-title"><h2>🐷 Ahorro</h2><p>Evolución del ahorro del usuario.</p></div>
+      <div class="stat-grid"><div class="stat"><span>Ahorro</span><b id="savingPageTotal">S/ 0</b></div><div class="stat"><span>Porcentaje</span><b id="savingPagePct">0%</b></div></div>
+      <article class="panel"><div class="panel-head"><h2>Evolución mensual</h2></div><div class="large-chart"><canvas id="savingDetailChart"></canvas></div></article>
+    </section>
+
+    <section id="section-deudas" class="page-section">
+      <div class="page-title"><h2>♙ Deudas</h2><p>Movimientos identificados como deuda o préstamo.</p></div>
+      <article class="panel"><div class="panel-head"><h2>Detalle</h2></div><div class="table-wrap"><table><thead><tr><th>Fecha</th><th>Categoría</th><th>Descripción</th><th>Monto</th></tr></thead><tbody id="debtTable"></tbody></table></div></article>
+    </section>
+
+    <section id="section-reportes" class="page-section">
+      <div class="page-title"><h2>▤ Reportes</h2><p>Resumen consolidado.</p></div>
+      <div class="stat-grid four"><div class="stat"><span>Ingresos</span><b id="reportIncome">S/ 0</b></div><div class="stat"><span>Gastos</span><b id="reportExpense">S/ 0</b></div><div class="stat"><span>Saldo</span><b id="reportBalance">S/ 0</b></div><div class="stat"><span>Transacciones</span><b id="reportCount">0</b></div></div>
+      <article class="panel"><div class="panel-head"><h2>Ingresos vs Gastos</h2></div><div class="large-chart"><canvas id="reportChart"></canvas></div></article>
+    </section>
+
+    <section id="section-metas" class="page-section">
+      <div class="page-title"><h2>♢ Metas</h2><p>Seguimiento de objetivos financieros.</p></div>
+      <article class="panel goal"><div><span>Meta de ahorro de referencia</span><b>S/ 3,000</b></div><div class="goal-progress"><span id="goalProgress"></span></div><strong id="goalText">0%</strong></article>
+    </section>
+
+    <section id="section-configuracion" class="page-section">
+      <div class="page-title"><h2>⚙ Configuración</h2><p>Configuración del dashboard.</p></div>
+      <article class="panel settings"><label>Moneda<select id="settingsCurrency"><option>PEN</option><option>USD</option><option>EUR</option></select></label><button id="saveSettings">Guardar</button><p id="settingsMsg"></p></article>
+    </section>
+
+    <section id="section-ayuda" class="page-section">
+      <div class="page-title"><h2>? Ayuda</h2><p>Cómo utilizar FinBot.</p></div>
+      <article class="panel help"><h3>Buscar usuario</h3><p>Escribe el teléfono o usuario y pulsa <b>Buscar</b>. Se realiza una consulta GET a tu API.</p><h3>Actualizar</h3><p>El botón Actualizar vuelve a consultar la API para el usuario actual.</p></article>
+    </section>
+  </main>
+</div>
+<script src="app.js"></script>
+</body>
+</html>
