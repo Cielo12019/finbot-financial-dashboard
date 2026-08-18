@@ -1,13 +1,33 @@
 # FinBot Dashboard
 
-Versión rediseñada según la imagen de referencia.
+Dashboard web para consultar y visualizar información financiera de usuarios.
 
-- Mantiene la API GET de Apps Script.
-- Mantiene la búsqueda de usuario por teléfono con el botón **Buscar**.
-- La consulta usa `?phone=...&moneda=...`.
+Permite buscar usuarios por teléfono y consultar su información según la moneda seleccionada mediante una API de Google Apps Script.
+
+<img width="1862" height="797" alt="image" src="https://github.com/user-attachments/assets/4493f9e5-2008-4862-8c73-0687232014fc" />
+<img width="1872" height="875" alt="image" src="https://github.com/user-attachments/assets/aca66227-d7d5-48d2-b00c-25096e078cdf" />
+
+## Funcionalidades
+
+- Búsqueda por número de teléfono.
+- Consulta por moneda.
+- Resumen de información financiera.
+- Gráfico de ingresos por fuente o categoría.
+- Gráfico de dona en **Tu Plata Entrante**.
 - Diseño responsive.
-- Sidebar y dashboard estilo referencia.
-- Gráficos con alturas controladas para evitar que se hagan gigantes.
-- Navegación de pestañas y vistas adicionales.
+- Sidebar y navegación por secciones.
 
-- La sección **Tu Plata Entrante** ahora muestra un gráfico de dona dinámico con la distribución de ingresos por fuente/categoría y sus porcentajes.
+## API
+
+La consulta utiliza los siguientes parámetros:
+
+```text
+?phone=999999999&moneda=PEN
+```
+
+
+
+
+
+
+
