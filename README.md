@@ -1,11 +1,11 @@
 # FinBot Dashboard
 
-Dashboard web para consultar y visualizar información financiera de usuarios.
-
-Permite buscar usuarios por teléfono y consultar su información según la moneda seleccionada mediante una API de Google Apps Script.
+Dashboard web para consultar y visualizar información financiera de usuarios que se comunican con el agente de IA de WhatsApp
 
 <img width="1862" height="797" alt="image" src="https://github.com/user-attachments/assets/4493f9e5-2008-4862-8c73-0687232014fc" />
 <img width="1872" height="875" alt="image" src="https://github.com/user-attachments/assets/aca66227-d7d5-48d2-b00c-25096e078cdf" />
+
+[FinBot Dashboard](https://cielo12019.github.io/finbot-financial-dashboard/)
 
 ## Funcionalidades
 
